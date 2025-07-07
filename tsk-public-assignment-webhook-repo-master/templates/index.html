@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="15">
+  <title>GitHub Event Log</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f1b2;
+      color: #333333;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #222;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #222;
+      padding: 30px;
+      border-radius: 40px;
+    }
+
+    li {
+      background-color: white;
+      margin-bottom: 15px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(255, 255, 255, 0.767);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .no-events {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>Github Log</h1>
+  <ul>
+    {% if events %}
+      {% for event in events %}
+        <li>
+          {% if event.event == 'push' %}
+            {% if event.is_merge %}
+              "{{event.pusher}}" merged  "{{event.from_branch}}" to "{{event.to_branch}}" on {{event.timestamp}}
+            {% else %}
+              "{{event.pusher}}" pushed to "{{event.to_branch}}" on {{event.timestamp}}
+            {% endif %}
+          {% elif event.event == 'pull_request' %}
+            "{{event.author}}" submitted a pull request from "{{event.from_branch}}" to "{{event.to_branch}}" on {{event.timestamp}}
+          {% endif %}
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="no-events">No events found</li>
+    {% endif %}
+  </ul>
+</body>
+</html>
